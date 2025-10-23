@@ -1,0 +1,181 @@
+# ActivityWatch LLM Worker Configuration
+# Copy this to config.yaml and customize for your needs
+
+# Client definitions for strong-hint matching
+clients:
+  "STS Contract":
+    domains:
+      - "stsdiesel.com"
+      - "microsoftonline.com"
+    keywords:
+      - "STS"
+      - "Turbo"
+      - "QMS"
+      - "PPAP"
+      - "FMEA"
+    paths:
+      - "/work/clients/sts"
+
+  "Qualira (AWP)":
+    domains:
+      - "qualira.com"
+      - "awp.qualira.com"
+    keywords:
+      - "Qualira"
+      - "AWP"
+      - "Quality Management"
+    paths:
+      - "/work/clients/qualira"
+
+  "Xodus Medical":
+    domains:
+      - "xodusmedical.com"
+    keywords:
+      - "Xodus"
+      - "Medical Device"
+    paths:
+      - "/work/clients/xodus"
+
+  "Hand Consultants":
+    domains:
+      - "handconsultants.com"
+    keywords:
+      - "Hand Consultants"
+      - "Orthopedic"
+    paths:
+      - "/work/clients/hand"
+
+  "DTG Engineering":
+    domains:
+      - "dtgagnon.com"
+      - "dtgengineering.com"
+    keywords:
+      - "DTG.E"
+      - "DTGE"
+      - "DTG Engineering"
+      - "Engineering Services"
+    paths:
+      - "/work/dtg"
+
+# Rule-based classification hints
+rules:
+  # Hobby programming indicators
+  hobby_prog_keywords:
+    - "nix"
+    - "nixos"
+    - "dotfiles"
+    - "neovim"
+    - "nvim"
+    - "kicad"
+    - "freecad"
+    - "git"
+    - "github"
+    - "gitlab"
+
+  # Machining and CAD keywords
+  machining_keywords:
+    - "cnc"
+    - "lathe"
+    - "end mill"
+    - "toolpath"
+    - "feeds"
+    - "speeds"
+    - "cam"
+    - "fusion 360"
+    - "solidworks"
+
+  # Educational/learning keywords
+  edu_keywords:
+    - "tutorial"
+    - "how to"
+    - "guide"
+    - "documentation"
+    - "learn"
+    - "course"
+
+  # Entertainment - video domains
+  video_domains:
+    - "jellyfin"
+    - "youtube.com"
+    - "twitch.tv"
+    - "netflix.com"
+    - "hulu.com"
+    - "vimeo.com"
+
+  # Entertainment - social domains
+  social_domains:
+    - "twitter.com"
+    - "x.com"
+    - "facebook.com"
+    - "reddit.com"
+    - "instagram.com"
+    - "linkedin.com"
+
+  # Entertainment - gaming
+  gaming_keywords:
+    - "steam"
+    - "iracing"
+
+# Processing thresholds
+thresholds:
+  # Minimum event duration in seconds
+  min_duration_sec: 10
+
+  # Minimum LLM confidence to accept (0.0-1.0)
+  llm_confidence_min: 0.70
+
+  # Cache TTL in days
+  cache_ttl_days: 7
+
+  # Poll interval in seconds
+  poll_interval_sec: 60
+
+  # Lookback window in minutes
+  lookback_minutes: 15
+
+# LLM Configuration
+llm:
+  # Provider: "ollama" or "openai"
+  provider: "ollama"
+
+  # Ollama settings
+  ollama:
+    host: "http://localhost:11434"
+    model: "qwen3:14b"
+    timeout: 30
+
+  # OpenAI settings (requires OPENAI_API_KEY env var)
+  openai:
+    model: "gpt-5-nano"
+    timeout: 30
+
+  # Common settings
+  temperature: 0.2
+  max_tokens: 256
+
+# ActivityWatch connection
+activitywatch:
+  host: "localhost"
+  port: 5600
+  testing: false
+
+  # Source buckets to monitor
+  source_buckets:
+    - "aw-watcher-window"
+    - "aw-watcher-zen"
+    - "aw-watcher-afk"
+
+  # Output bucket name (hostname will be appended automatically)
+  output_bucket_prefix: "aw-llm-categories"
+
+# Logging
+logging:
+  level: "INFO" # DEBUG, INFO, WARNING, ERROR
+  format: "json" # "json" or "text"
+  output: "stdout" # "stdout" or file path
+
+# Cache settings
+cache:
+  db_path: "~/.local/share/aw-llm-worker/cache.db"
+  max_entries: 10000
+  cleanup_interval_hours: 24

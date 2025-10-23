@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "aw-llm-worker"
+version = "0.1.0"
+description = "ActivityWatch LLM categorizer sidecar - enriches and classifies AW events via LLM + rules"
+authors = ["Daniel Gagnon"]
+readme = "README.md"
+packages = [
+    { include = "aw_llm_worker" },
+]
+
+[tool.poetry.scripts]
+aw-sorter = "aw_llm_worker.__main__:cli"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# ActivityWatch dependencies (using local sources)
+aw-client = { path = "activitywatch_src/aw-client", develop = true }
+aw-core = { path = "activitywatch_src/aw-core", develop = true }
+# Core dependencies
+requests = "^2.31.0"
+pyyaml = "^6.0"
+click = "^8.1.0"
+# LLM clients
+openai = "^1.0.0"
+ollama = "^0.1.0"
+# Config hot-reload
+watchdog = "^3.0.0"
+# Data validation
+pydantic = "^2.0.0"
+# Caching
+sqlalchemy = "^2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+mypy = "^1.5.0"
+ruff = "^0.1.0"
+types-pyyaml = "*"
+types-requests = "*"
+
+[tool.mypy]
+files = ["aw_llm_worker", "tests"]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "UP", "I"]
+ignore = ["E501"]  # Line too long (handled by formatter)
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --cov=aw_llm_worker --cov-report=term-missing"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
