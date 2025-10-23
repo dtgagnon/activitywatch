@@ -20,3 +20,6 @@ __pycache__
 # Misc
 .*cache
 .DS_Store
+
+# Nix/direnv
+.direnv
